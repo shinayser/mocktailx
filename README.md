@@ -1,19 +1,45 @@
-A library for Dart developers.
+## mocktailx
+A set of utility functions for [mocktail](https://pub.dev/packages/mocktail) apis.
 
 ## Usage
 
-A simple usage example:
+First import mocktailx to your pubspec:
 
-```dart
+```yaml
+mocktailx: ^0.0.1
+```
+Note that mocktailx is a container for mocktail, so you don't need to import it.
+Just import mocktailx and you're ready to go. Oh, and don't forget to fix your imports:
+
+```dart 
 import 'package:mocktailx/mocktailx.dart';
-
-main() {
-  var awesome = new Awesome();
-}
 ```
 
-## Features and bugs
+## Features
 
-Please file feature requests and bugs at the [issue tracker][tracker].
+#### thenAnswerWithVoid
+```dart
+//Instead of doing:
+when(repo.futureVoidFunction).thenAnswer((invocation) async {});
+//You can just:
+when(repo.futureVoidFunction).thenAnswerWithVoid();  
+```
 
-[tracker]: http://example.com/issues/replaceme
+#### thenAnswerWith(T)
+
+```dart
+//Instead of doing:
+when(repo.futureIntFunction).thenAnswer((invocation) async => 10);
+//You can just:
+when(repo.futureIntFunction).thenAnswerWith(10);
+```
+
+
+#### thenEmit(List<T>)
+
+```dart
+//Instead of doing:
+when(repo.streamValue).thenAnswer((invocation) => Stream.fromIterable([1,2,3,4,5]));
+//You can just:
+when(repo.streamValue).thenEmit([1,2,3,4,5]);
+```

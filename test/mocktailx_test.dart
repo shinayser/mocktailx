@@ -9,7 +9,7 @@ class Person {
   @override
   bool operator ==(Object other) {
     if (other is Person) {
-      return this.name == other.name;
+      return name == other.name;
     }
 
     return false;
@@ -76,27 +76,32 @@ void main() {
   });
 
   test('thenAnswerWithVoid', () {
-    when(() => repo.futureVoidFunction()).thenAnswerWithVoid();
+    when(repo.futureVoidFunction).thenAnswerWithVoid();
     expect(repo.futureVoidFunction(), completes);
   });
 
   test('thenAnswerWith', () {
-    when(() => repo.asyncInteger()).thenAnswerWith(10);
+    when(repo.asyncInteger).thenAnswerWith(10);
     expect(repo.asyncInteger(), completion(10));
 
-    when(() => repo.asyncBool()).thenAnswerWith(false);
+    when(repo.asyncBool).thenAnswerWith(false);
     expect(repo.asyncBool(), completion(false));
 
-    when(() => repo.asyncString()).thenAnswerWith('Nice job');
+    when(repo.asyncString).thenAnswerWith('Nice job');
     expect(repo.asyncString(), completion('Nice job'));
 
-    when(() => repo.asyncPerson()).thenAnswerWith(Person('Daniel'));
+    when(() => repo.asyncValueWithNamedAndPositionalArgs(any(),
+        y: any(named: 'y'))).thenAnswerWith(666);
+
+    expect(repo.asyncValueWithNamedAndPositionalArgs(1, y: 2), completion(666));
+
+    when(repo.asyncPerson).thenAnswerWith(Person('Daniel'));
     expect(repo.asyncPerson(), completion(Person('Daniel')));
   });
 
   test('thenEmit', () {
-    when(() => repo.streamValue()).thenEmit([0, 1, 2, 3]);
+    when(repo.streamValue).thenEmit([0, 1, 2, 3]);
     expect(repo.streamValue(), emitsInOrder([0, 1, 2, 3]));
-    verify(() => repo.streamValue()).called(1);
+    verify(repo.streamValue).called(1);
   });
 }
