@@ -1,6 +1,51 @@
 import 'package:mocktailx/mocktailx.dart';
 import 'package:test/test.dart';
 
+class TestRepositoryMock extends Mock implements TestRepository {}
+
+void main() {
+  late TestRepositoryMock repo;
+
+  setUp(() {
+    repo = TestRepositoryMock();
+  });
+
+  test('thenReturnWithVoid', () {
+    when(repo.voidFunction).thenReturnWithVoid();
+    expect(() => repo.voidFunction(), returnsNormally);
+  });
+
+  test('thenAnswerWithVoid', () {
+    when(repo.futureVoidFunction).thenAnswerWithVoid();
+    expect(repo.futureVoidFunction(), completes);
+  });
+
+  test('thenAnswerWith', () {
+    when(repo.asyncInteger).thenAnswerWith(10);
+    expect(repo.asyncInteger(), completion(10));
+
+    when(repo.asyncBool).thenAnswerWith(false);
+    expect(repo.asyncBool(), completion(false));
+
+    when(repo.asyncString).thenAnswerWith('Nice job');
+    expect(repo.asyncString(), completion('Nice job'));
+
+    when(() => repo.asyncValueWithNamedAndPositionalArgs(any(),
+        y: any(named: 'y'))).thenAnswerWith(666);
+
+    expect(repo.asyncValueWithNamedAndPositionalArgs(1, y: 2), completion(666));
+
+    when(repo.asyncPerson).thenAnswerWith(Person('Daniel'));
+    expect(repo.asyncPerson(), completion(Person('Daniel')));
+  });
+
+  test('thenEmit', () {
+    when(repo.streamValue).thenEmit([0, 1, 2, 3]);
+    expect(repo.streamValue(), emitsInOrder([0, 1, 2, 3]));
+    verify(repo.streamValue).called(1);
+  });
+}
+
 class Person {
   final String name;
 
@@ -49,6 +94,8 @@ class TestRepository {
 
   int addOne(int x) => x + 1;
 
+  int? returnsNullable() => null;
+
   void voidFunction() {}
 
   void voidWithOptionalPositionalArg([int? x]) {}
@@ -64,44 +111,4 @@ class TestRepository {
   void voidWithPositionalAndOptionalNamedArg(int x, {int? y}) {}
 
   void voidWithPositionalArgs(int x, int y) {}
-}
-
-class TestRepositoryMock extends Mock implements TestRepository {}
-
-void main() {
-  late TestRepositoryMock repo;
-
-  setUp(() {
-    repo = TestRepositoryMock();
-  });
-
-  test('thenAnswerWithVoid', () {
-    when(repo.futureVoidFunction).thenAnswerWithVoid();
-    expect(repo.futureVoidFunction(), completes);
-  });
-
-  test('thenAnswerWith', () {
-    when(repo.asyncInteger).thenAnswerWith(10);
-    expect(repo.asyncInteger(), completion(10));
-
-    when(repo.asyncBool).thenAnswerWith(false);
-    expect(repo.asyncBool(), completion(false));
-
-    when(repo.asyncString).thenAnswerWith('Nice job');
-    expect(repo.asyncString(), completion('Nice job'));
-
-    when(() => repo.asyncValueWithNamedAndPositionalArgs(any(),
-        y: any(named: 'y'))).thenAnswerWith(666);
-
-    expect(repo.asyncValueWithNamedAndPositionalArgs(1, y: 2), completion(666));
-
-    when(repo.asyncPerson).thenAnswerWith(Person('Daniel'));
-    expect(repo.asyncPerson(), completion(Person('Daniel')));
-  });
-
-  test('thenEmit', () {
-    when(repo.streamValue).thenEmit([0, 1, 2, 3]);
-    expect(repo.streamValue(), emitsInOrder([0, 1, 2, 3]));
-    verify(repo.streamValue).called(1);
-  });
 }
