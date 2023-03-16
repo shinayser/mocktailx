@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:mocktailx/mocktailx.dart';
 import 'package:test/test.dart';
 
@@ -18,6 +20,9 @@ void main() {
   test('thenAnswerWithVoid', () {
     when(repo.futureVoidFunction).thenAnswerWithVoid();
     expect(repo.futureVoidFunction(), completes);
+
+    when(repo.futureVoidOrFunction).thenAnswerWithVoid();
+    expect(repo.futureVoidOrFunction(), completes);
   });
 
   test('thenAnswerWith', () {
@@ -29,6 +34,9 @@ void main() {
 
     when(repo.asyncString).thenAnswerWith('Nice job');
     expect(repo.asyncString(), completion('Nice job'));
+
+    when(repo.asyncStringOr).thenAnswerWith('Nice job Or!');
+    expect(repo.asyncStringOr(), completion('Nice job Or!'));
 
     when(() => repo.asyncValueWithNamedAndPositionalArgs(any(),
         y: any(named: 'y'))).thenAnswerWith(666);
@@ -68,11 +76,15 @@ class TestRepository {
 
   Future<void> futureVoidFunction() => Future.value();
 
+  FutureOr<void> futureVoidOrFunction() => Future.value();
+
   Future<int> asyncInteger() => Future.value(1);
 
   Future<bool> asyncBool() => Future.value(true);
 
   Future<String> asyncString() => Future.value('Just testing');
+
+  FutureOr<String> asyncStringOr() => Future.value('Just testing');
 
   Future<Person> asyncPerson() => Future.value(Person('Daniel'));
 
