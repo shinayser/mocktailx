@@ -1,3 +1,6 @@
+## 0.0.5
+- Upgrading to mocktail 1.0.1
+
 ## 0.0.4
 - Adding FutureOr extensions
 

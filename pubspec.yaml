@@ -1,13 +1,13 @@
 name: mocktailx
 description: A set of utility functions over mocktail library created to increase productivity over daily mocking/testing.
 homepage: https://github.com/shinayser/mocktailx
-version: 0.0.4
+version: 0.0.5
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
 
 dependencies:
-  mocktail: ^0.3.0
+  mocktail: ^1.0.1
 
 dev_dependencies:
   pedantic: ^1.11.0
