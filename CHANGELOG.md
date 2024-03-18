@@ -1,3 +1,6 @@
+## 0.0.7
+- Fixing README.md
+
 ## 0.0.6
 - Upgrading to mocktail 1.0.3
 - Adding `thenAnswerInOrder` and `thenReturnInOrder` methods

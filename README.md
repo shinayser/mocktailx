@@ -7,9 +7,9 @@ A set of utility functions for [mocktail](https://pub.dev/packages/mocktail) api
 First import mocktailx to your pubspec:
 
 ```yaml  
-mocktailx: ^0.0.4
+mocktailx: ^latest version here
 ```  
-Note that this library is a container for **mocktail** `0.3.0`, so you **don't** need to import **mocktail**.  
+Note that this library is a container for **mocktail**, so you **don't** need to import **mocktail**.  
 And don't forget to fix your imports:
 
 ```dart 
