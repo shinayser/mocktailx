@@ -1,4 +1,8 @@
 ## 0.0.5
+- Upgrading to mocktail 1.0.3
+- Adding `thenAnswerInOrder` and `thenReturnInOrder` methods
+
+## 0.0.5
 - Upgrading to mocktail 1.0.1
 
 ## 0.0.4
