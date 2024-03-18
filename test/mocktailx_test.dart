@@ -52,6 +52,75 @@ void main() {
     expect(repo.streamValue(), emitsInOrder([0, 1, 2, 3]));
     verify(repo.streamValue).called(1);
   });
+
+  group('thenReturnInOrder', () {
+    test('returns different outputs called consecutively with the same input',
+        () {
+
+      when(() => repo.addOne(1)).thenReturnInOrder([6, 7, 99]);
+
+      expect(repo.addOne(1), 6);
+      expect(repo.addOne(1), 7);
+      expect(repo.addOne(1), 99);
+    });
+
+    test('returns different outputs called consecutively with any() input', () {
+      when(() => repo.addOne(any())).thenReturnInOrder([6, 7, 99]);
+
+      expect(repo.addOne(1), 6);
+      expect(repo.addOne(2), 7);
+      expect(repo.addOne(3), 99);
+    });
+
+    test('throws if invocations do not match callback count', () {
+      when(() => repo.addOne(any())).thenReturnInOrder([6]);
+
+      expect(repo.addOne(1), 6);
+      try {
+        repo.addOne(2);
+      } on Exception catch (e) {
+        expect(e.toString(),
+            'Exception: 1 callbacks provided but invoked 2 times. No more answers available.');
+        return;
+      }
+      fail('Exception block not executed.');
+    });
+  });
+
+  group('thenAnswerInOrder', () {
+    test('returns different outputs called consecutively with the same input',
+        () async {
+      when(() => repo.asyncInteger()).thenAnswerInOrder([
+        (invocation) async => 6,
+        (_) async => 7,
+        (_) async => 99,
+      ]);
+
+      int result = await repo.asyncInteger();
+      expect(result, 6);
+      result = await repo.asyncInteger();
+      expect(result, 7);
+      result = await repo.asyncInteger();
+      expect(result, 99);
+    });
+
+    test('throws if invocations do not match callback count', () async {
+      when(() => repo.asyncInteger()).thenAnswerInOrder([
+        (invocation) async => 6,
+      ]);
+
+      int result = await repo.asyncInteger();
+      expect(result, 6);
+      try {
+        await repo.asyncInteger();
+      } on Exception catch (e) {
+        expect(e.toString(),
+            'Exception: 1 callbacks provided but invoked 2 times. No more answers available.');
+        return;
+      }
+      fail('Exception block not executed.');
+    });
+  });
 }
 
 class Person {
@@ -60,13 +129,12 @@ class Person {
   Person(this.name);
 
   @override
-  bool operator ==(Object other) {
-    if (other is Person) {
-      return name == other.name;
-    }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Person && runtimeType == other.runtimeType && name == other.name;
 
-    return false;
-  }
+  @override
+  int get hashCode => name.hashCode;
 }
 
 class TestRepository {

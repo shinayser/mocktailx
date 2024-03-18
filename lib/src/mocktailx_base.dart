@@ -32,3 +32,29 @@ extension VoidAnswerOnVoid on When<void> {
   /// The function will be called and returned with a null result.
   void thenReturnWithVoid() => thenReturn(null);
 }
+
+extension WhenExtension<T> on When<T> {
+  void thenAnswerInOrder(List<Answer<T>> answers) {
+    final originalCount = answers.length;
+    return thenAnswer((invocation) {
+      if (answers.isEmpty) {
+        throw Exception(
+          '$originalCount callbacks provided but invoked ${originalCount + 1} times. No more answers available.',
+        );
+      }
+      return answers.removeAt(0)(invocation);
+    });
+  }
+
+  void thenReturnInOrder(List<T> answers) {
+    final originalCount = answers.length;
+    return thenAnswer((invocation) {
+      if (answers.isEmpty) {
+        throw Exception(
+          '$originalCount callbacks provided but invoked ${originalCount + 1} times. No more answers available.',
+        );
+      }
+      return answers.removeAt(0);
+    });
+  }
+}
