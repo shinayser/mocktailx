@@ -129,13 +129,12 @@ class Person {
   Person(this.name);
 
   @override
-  bool operator ==(Object other) {
-    if (other is Person) {
-      return name == other.name;
-    }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Person && runtimeType == other.runtimeType && name == other.name;
 
-    return false;
-  }
+  @override
+  int get hashCode => name.hashCode;
 }
 
 class TestRepository {
